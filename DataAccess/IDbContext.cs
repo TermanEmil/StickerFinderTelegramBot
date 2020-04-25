@@ -1,10 +1,10 @@
-﻿using System;
+﻿using System.Threading;
+using System.Threading.Tasks;
+
 namespace DataAccess
 {
-    public class IDbContext
+    public interface IDbContext
     {
-        public IDbContext()
-        {
-        }
+        Task<int> SaveChangesAsync(CancellationToken ct = default);
     }
 }

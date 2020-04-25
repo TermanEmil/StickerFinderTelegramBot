@@ -1,23 +1,25 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DataAccess;
 using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace Api.StartupConfigurations
+namespace Application
 {
     public class DescribeStickerCommand : IRequest
     {
-        public DescribeStickerCommand(int userId, string stickerFileId, string description)
+        public DescribeStickerCommand(int userId, string stickerId, string description)
         {
             UserId = userId;
-            StickerFileId = stickerFileId;
+            StickerId = stickerId;
             Description = description;
         }
 
         public int UserId { get; }
-        public string StickerFileId { get; }
+        public string StickerId { get; }
         public string Description { get; }
     }
 
@@ -33,20 +35,31 @@ namespace Api.StartupConfigurations
         public async Task<Unit> Handle(DescribeStickerCommand request, CancellationToken ct)
         {
             var author = await context.Users.FindOrThrow(request.UserId, ct);
-            var sticker = await context.Stickers.FindOrThrow(request.StickerFileId, ct);
+            var sticker = await context.Stickers.FindOrThrow(request.StickerId, ct);
 
-            var descriptions = request.Description.Split(
-                new[] { "\r\n", "\r", "\n" },
-                StringSplitOptions.None);
+            var descriptions = request.Description
+                .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
+                .Select(x => x.ToLower().Trim());
 
             foreach (var descriptionStr in descriptions)
             {
+                if (await DescriptionExists(author, sticker, descriptionStr))
+                    continue;
+
                 var description = new StickerDescription(author, sticker, descriptionStr);
                 context.StickerDescriptions.Add(description);
             }
 
             await context.SaveChangesAsync(ct);
             return Unit.Value;
+        }
+
+        private Task<bool> DescriptionExists(User author, Sticker sticker, string description)
+        {
+            return context.StickerDescriptions.AnyAsync(x =>
+                x.Author.Id == author.Id &&
+                x.Sticker.Id == sticker.Id &&
+                x.Description == description);
         }
     }
 }

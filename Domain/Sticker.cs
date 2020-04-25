@@ -1,10 +1,16 @@
-﻿using System;
-namespace Domain
+﻿namespace Domain
 {
-    public class Sticker
+    public class Sticker : IEntity<string>
     {
-        public Sticker()
+        private Sticker()
         {
         }
+
+        public Sticker(string id)
+        {
+            Id = id;
+        }
+
+        public string Id { get; private set; }
     }
 }

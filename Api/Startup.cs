@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Api.StartupConfigurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Persistence;
+using Telegram.Bot;
+using TelegramBot;
 
 namespace Api
 {
@@ -22,14 +19,15 @@ namespace Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.ConfigureDbContext();
+            services.ConfigureMediator();
+            services.ConfigureTelegramBot(Configuration["TelegramBot:Token"]);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TelegramBotClient botClient)
         {
             if (env.IsDevelopment())
             {
@@ -37,15 +35,12 @@ namespace Api
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.ApplicationServices.ConfigureTelegramBot(botClient);
+            app.ApplicationServices.ConfigureDbContext();
         }
     }
 }

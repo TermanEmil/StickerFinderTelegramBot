@@ -1,10 +1,7 @@
-﻿using System;
-namespace Domain
+﻿namespace Domain
 {
-    public class IEntity
+    public interface IEntity<T>
     {
-        public IEntity()
-        {
-        }
+        public T Id { get; }
     }
 }

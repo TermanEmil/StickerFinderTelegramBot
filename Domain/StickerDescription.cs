@@ -1,10 +1,21 @@
-﻿using System;
-namespace Domain
+﻿namespace Domain
 {
-    public class StickerDescription
+    public class StickerDescription : IEntity<int>
     {
-        public StickerDescription()
+        private StickerDescription()
         {
         }
+
+        public StickerDescription(User author, Sticker sticker, string description)
+        {
+            Author = author;
+            Sticker = sticker;
+            Description = description;
+        }
+
+        public int Id { get; private set; }
+        public User Author { get; private set; }
+        public Sticker Sticker { get; private set; }
+        public string Description { get; set; }
     }
 }

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Domain;
+using Microsoft.EntityFrameworkCore;
+
 namespace DataAccess
 {
-    public class IStickerFinderContext
+    public interface IStickerFinderContext : IDbContext
     {
-        public IStickerFinderContext()
-        {
-        }
+        DbSet<User> Users { get; }
+        DbSet<Sticker> Stickers { get; }
+        DbSet<StickerDescription> StickerDescriptions { get; }
     }
 }

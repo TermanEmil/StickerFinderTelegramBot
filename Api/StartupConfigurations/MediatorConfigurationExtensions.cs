@@ -1,10 +1,17 @@
-﻿using System;
+﻿using Application;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using TelegramBot.BotEvents;
+
 namespace Api.StartupConfigurations
 {
-    public class MediatorConfigurationExtensions
+    public static class MediatorConfigurationExtensions
     {
-        public MediatorConfigurationExtensions()
+        public static void ConfigureMediator(this IServiceCollection services)
         {
+            services.AddMediatR(
+                typeof(DescribeStickerCommandHandler),
+                typeof(OnMessageHandler));
         }
     }
 }
