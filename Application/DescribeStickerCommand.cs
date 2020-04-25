@@ -43,6 +43,9 @@ namespace Application
 
             foreach (var descriptionStr in descriptions)
             {
+                if (string.IsNullOrWhiteSpace(descriptionStr))
+                    continue;
+
                 if (await DescriptionExists(author, sticker, descriptionStr))
                     continue;
 
