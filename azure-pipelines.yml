@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'Debian-latest'
+  vmImage: 'debian-latest'
 
 variables:
   solution: '**/*.sln'
