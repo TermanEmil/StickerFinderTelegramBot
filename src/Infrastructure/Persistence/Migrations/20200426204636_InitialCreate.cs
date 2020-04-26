@@ -21,9 +21,7 @@ namespace Persistence.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true)
+                    Id = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -35,8 +33,8 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    AuthorId = table.Column<int>(nullable: true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AuthorId = table.Column<string>(nullable: true),
                     StickerId = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true)
                 },

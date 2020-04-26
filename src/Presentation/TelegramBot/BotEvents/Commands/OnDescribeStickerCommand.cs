@@ -5,7 +5,6 @@ using Application;
 using MediatR;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using TelegramBot.Utilities;
 
 namespace TelegramBot.BotEvents.Commands
 {
@@ -36,19 +35,20 @@ namespace TelegramBot.BotEvents.Commands
         {
             var message = notification.Message;
 
-            if (message.ReplyToMessage is null || message.ReplyToMessage.Sticker is null)
+            if (message.ReplyToMessage?.Sticker is null)
             {
-                await botClient.SendTextMessageAsync(message.Chat, "Must be a reply to a sticker");
+                await botClient.SendTextMessageAsync(message.Chat, "Must be a reply to a sticker", cancellationToken: ct);
                 return;
             }
 
             var stickerId = message.ReplyToMessage.Sticker.FileId;
+            var fromId = message.From.Id.ToString();
 
-            await mediator.Send(new EnsureStickerExistsCommand(stickerId), ct);
-            await mediator.Send(new EnsureUserExistsCommand(message.From.Id, message.From.FullName()), ct);
-            await mediator.Send(new DescribeStickerCommand(message.From.Id, stickerId, notification.Description));
+            await mediator.Send(new EnsureStickerIsRegisteredCommand(stickerId), ct);
+            await mediator.Send(new EnsureUserIsRegisteredCommand(fromId), ct);
+            await mediator.Send(new DescribeStickerCommand(fromId, stickerId, notification.Description), ct);
 
-            await botClient.SendTextMessageAsync(message.Chat, "Sticker described");
+            await botClient.SendTextMessageAsync(message.Chat, "Sticker described", cancellationToken: ct);
         }
     }
 }

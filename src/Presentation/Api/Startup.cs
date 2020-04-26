@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Persistence;
 using Telegram.Bot;
 using TelegramBot;
 
@@ -22,17 +21,15 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.ConfigureDbContext();
             services.ConfigureMediator();
+            services.ConfigureDbContext(Configuration.GetConnectionString("StickerFinderDb"));
             services.ConfigureTelegramBot(Configuration["TelegramBot:Token"]);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TelegramBotClient botClient)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -40,7 +37,6 @@ namespace Api
             app.UseEndpoints(endpoints => endpoints.MapControllers());
 
             app.ApplicationServices.ConfigureTelegramBot(botClient);
-            app.ApplicationServices.ConfigureDbContext();
         }
     }
 }

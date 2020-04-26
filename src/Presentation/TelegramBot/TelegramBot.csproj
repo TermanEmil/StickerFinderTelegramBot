@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +12,6 @@
   <ItemGroup>
     <Folder Include="BotEvents\" />
     <Folder Include="BotEvents\Commands\" />
-    <Folder Include="Utilities\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Application\Application.csproj" />

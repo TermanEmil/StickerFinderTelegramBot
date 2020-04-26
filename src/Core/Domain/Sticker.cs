@@ -1,4 +1,6 @@
-﻿namespace Domain
+﻿using System;
+
+namespace Domain
 {
     public class Sticker : IEntity<string>
     {
@@ -8,6 +10,9 @@
 
         public Sticker(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentNullException(nameof(id));
+
             Id = id;
         }
 

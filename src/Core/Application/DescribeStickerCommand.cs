@@ -11,31 +11,31 @@ namespace Application
 {
     public class DescribeStickerCommand : IRequest
     {
-        public DescribeStickerCommand(int userId, string stickerId, string description)
+        public DescribeStickerCommand(string userId, string stickerId, string description)
         {
             UserId = userId;
             StickerId = stickerId;
             Description = description;
         }
 
-        public int UserId { get; }
+        public string UserId { get; }
         public string StickerId { get; }
         public string Description { get; }
     }
 
     public class DescribeStickerCommandHandler : IRequestHandler<DescribeStickerCommand>
     {
-        private readonly IStickerFinderContext context;
+        private readonly IStickerFinderDbContext dbContext;
 
-        public DescribeStickerCommandHandler(IStickerFinderContext context)
+        public DescribeStickerCommandHandler(IStickerFinderDbContext dbContext)
         {
-            this.context = context;
+            this.dbContext = dbContext;
         }
 
         public async Task<Unit> Handle(DescribeStickerCommand request, CancellationToken ct)
         {
-            var author = await context.Users.FindOrThrow(request.UserId, ct);
-            var sticker = await context.Stickers.FindOrThrow(request.StickerId, ct);
+            var author = await dbContext.Users.FindOrThrow(request.UserId, ct);
+            var sticker = await dbContext.Stickers.FindOrThrow(request.StickerId, ct);
 
             var descriptions = request.Description
                 .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
@@ -50,16 +50,16 @@ namespace Application
                     continue;
 
                 var description = new StickerDescription(author, sticker, descriptionStr);
-                context.StickerDescriptions.Add(description);
+                dbContext.StickerDescriptions.Add(description);
             }
 
-            await context.SaveChangesAsync(ct);
+            await dbContext.SaveChangesAsync(ct);
             return Unit.Value;
         }
 
         private Task<bool> DescriptionExists(User author, Sticker sticker, string description)
         {
-            return context.StickerDescriptions.AnyAsync(x =>
+            return dbContext.StickerDescriptions.AnyAsync(x =>
                 x.Author.Id == author.Id &&
                 x.Sticker.Id == sticker.Id &&
                 x.Description == description);

@@ -23,16 +23,16 @@ namespace Application
 
     public class FindMatchingStickersQueryHandler : IRequestHandler<FindMatchingStickersQuery, IEnumerable<Sticker>>
     {
-        private readonly IStickerFinderContext context;
+        private readonly IStickerFinderDbContext dbContext;
 
-        public FindMatchingStickersQueryHandler(IStickerFinderContext context)
+        public FindMatchingStickersQueryHandler(IStickerFinderDbContext dbContext)
         {
-            this.context = context;
+            this.dbContext = dbContext;
         }
 
         public async Task<IEnumerable<Sticker>> Handle(FindMatchingStickersQuery request, CancellationToken ct)
         {
-            return await context.StickerDescriptions
+            return await dbContext.StickerDescriptions
                 .Where(x => x.Description.Contains(request.Description))
                 .Select(x => x.Sticker)
                 .Distinct()
