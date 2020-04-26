@@ -5,11 +5,11 @@ Have you ever thought about how much time people spend on searching just the per
 
 In order to use it, you must first send it a sticker, then reply to it with the command `/describe` and some text, each line containing a separate description.
 
-![existence-is-pain](./Images/existence-is-pain.png)
+![existence-is-pain](./imgs/existence-is-pain.png)
 
 This bot supports [inline](https://core.telegram.org/bots/inline) queries, meaning you can use this bot to search for stickers from any chat. Simply call it `@FindMyStickerBot <some description>`:
 
-![existence-is-pain-query](./Images/existence-is-pain-query.png)
+![existence-is-pain-query](./imgs/existence-is-pain-query.png)
 
 ## Run it locally
 1. User [BotFather](https://telegram.me/BotFather) to create a bot
