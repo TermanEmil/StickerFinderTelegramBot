@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
 {
-    public interface IStickerFinderContext : IDbContext
+    public interface IStickerFinderDbContext : IDbContext
     {
         DbSet<User> Users { get; }
         DbSet<Sticker> Stickers { get; }

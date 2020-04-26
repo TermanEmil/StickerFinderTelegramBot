@@ -1,18 +1,21 @@
-﻿namespace Domain
+﻿using System;
+
+namespace Domain
 {
-    public class User : IEntity<int>
+    public class User : IEntity<string>
     {
         private User()
         {
         }
 
-        public User(int id, string name)
+        public User(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentNullException(nameof(id));
+
             Id = id;
-            Name = name;
         }
 
-        public int Id { get; private set; }
-        public string Name { get; private set; }
+        public string Id { get; private set; }
     }
 }
