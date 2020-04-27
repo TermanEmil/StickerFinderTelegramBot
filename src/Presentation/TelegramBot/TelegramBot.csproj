@@ -10,10 +10,7 @@
     <PackageReference Include="MediatR" Version="8.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BotEvents\" />
-    <Folder Include="BotEvents\Commands\" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Utilities\Utilities.csproj" />
     <ProjectReference Include="..\..\Core\Application\Application.csproj" />
   </ItemGroup>
 </Project>
