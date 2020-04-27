@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Utilities;
 
 namespace Domain
 {
@@ -8,14 +8,20 @@ namespace Domain
         {
         }
 
-        public Sticker(string id)
+        public Sticker(string id, string fileId)
         {
-            if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentNullException(nameof(id));
-
-            Id = id;
+            Id = Guard.Against.Empty(id, nameof(id));
+            FileId = Guard.Against.Empty(fileId, nameof(fileId));
         }
 
+        /// <summary>
+        /// sticker.FileUniqueId
+        /// </summary>
         public string Id { get; private set; }
+
+        /// <summary>
+        /// sticker.FileId
+        /// </summary>
+        public string FileId { get; private set; }
     }
 }

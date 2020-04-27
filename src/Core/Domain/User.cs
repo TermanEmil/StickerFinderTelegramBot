@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Utilities;
 
 namespace Domain
 {
@@ -10,10 +10,7 @@ namespace Domain
 
         public User(string id)
         {
-            if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentNullException(nameof(id));
-
-            Id = id;
+            Id = Guard.Against.Empty(id, nameof(id));
         }
 
         public string Id { get; private set; }

@@ -44,12 +44,12 @@ namespace TelegramBot.BotEvents.Commands
                 return;
             }
 
-            var stickerId = message.ReplyToMessage.Sticker.FileId;
+            var sticker = message.ReplyToMessage.Sticker;
             var fromId = message.From.Id.ToString();
 
-            await mediator.Send(new EnsureStickerIsRegisteredCommand(stickerId), ct);
+            await mediator.Send(new EnsureStickerIsRegisteredCommand(sticker.FileUniqueId, sticker.FileId), ct);
             await mediator.Send(new EnsureUserIsRegisteredCommand(fromId), ct);
-            var descriptions = await mediator.Send(new GetStickerDescriptionsQuery(stickerId), ct);
+            var descriptions = await mediator.Send(new GetStickerDescriptionsQuery(sticker.FileUniqueId), ct);
 
             var newMessage = BuildMessage(descriptions.ToList());
             await botClient.SendTextMessageAsync(

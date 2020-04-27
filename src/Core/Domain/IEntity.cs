@@ -1,7 +1,7 @@
 ﻿namespace Domain
 {
-    public interface IEntity<T>
+    public interface IEntity<out T>
     {
-        public T Id { get; }
+        T Id { get; }
     }
 }
