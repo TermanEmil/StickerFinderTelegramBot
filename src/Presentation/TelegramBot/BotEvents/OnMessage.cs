@@ -29,15 +29,14 @@ namespace TelegramBot.BotEvents
         public async Task Handle(OnMessage notification, CancellationToken ct)
         {
             var message = notification.Message;
-
             if (message.Text is null)
                 return;
 
-            await TryExecuteCommand(message, "/describe", async s =>
-                await mediator.Publish(new OnDescribeStickerCommand(message, s), ct));
+            await TryExecuteCommand(message, "/describe", s => mediator.Publish(new OnDescribeStickerCommand(message, s), ct));
+            await TryExecuteCommand(message, "/list", s => mediator.Publish(new OnListDescriptionsCommand(message), ct));
         }
 
-        private Task TryExecuteCommand(Message message, string command, Func<string, Task> action)
+        private static Task TryExecuteCommand(Message message, string command, Func<string, Task> action)
         {
             var messageText = message.Text.ToLower().Trim();
             if (!messageText.StartsWith(command))
