@@ -3,17 +3,20 @@ using System.Threading.Tasks;
 using DataAccess;
 using Domain;
 using MediatR;
+using Utilities;
 
 namespace Application
 {
     public class EnsureStickerIsRegisteredCommand : IRequest
     {
-        public EnsureStickerIsRegisteredCommand(string stickerId)
+        public EnsureStickerIsRegisteredCommand(string stickerId, string stickerFileId)
         {
-            StickerId = stickerId;
+            StickerId = Guard.Against.Empty(stickerId, nameof(stickerId));
+            StickerFileId = Guard.Against.Empty(stickerFileId, nameof(stickerFileId)); ;
         }
 
         public string StickerId { get; }
+        public string StickerFileId { get; }
     }
 
     public class EnsureStickerIsRegisteredCommandHandler : IRequestHandler<EnsureStickerIsRegisteredCommand>
@@ -30,7 +33,7 @@ namespace Application
             var sticker = await dbContext.Stickers.FindAsync(request.StickerId);
             if (sticker is null)
             {
-                sticker = new Sticker(request.StickerId);
+                sticker = new Sticker(request.StickerId, request.StickerFileId);
                 dbContext.Stickers.Add(sticker);
                 await dbContext.SaveChangesAsync(ct);
             }

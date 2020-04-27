@@ -38,7 +38,7 @@ namespace TelegramBot.BotEvents
                 return;
 
             var stickers = await mediator.Send(new FindMatchingStickersQuery(query.Query), ct);
-            var results = stickers.Select((sticker, i) => new InlineQueryResultCachedSticker(i.ToString(), sticker.Id));
+            var results = stickers.Select((s, i) => new InlineQueryResultCachedSticker(i.ToString(), s.FileId));
 
             await botClient.AnswerInlineQueryAsync(query.Id, results, cancellationToken: ct);
         }

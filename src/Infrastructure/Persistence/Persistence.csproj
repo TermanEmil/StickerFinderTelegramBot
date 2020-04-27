@@ -20,8 +20,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\DataAccess\DataAccess.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Configurations\" />
-  </ItemGroup>
 </Project>
