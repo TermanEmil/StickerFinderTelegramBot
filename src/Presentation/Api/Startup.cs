@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Telegram.Bot;
 using TelegramBot;
 
 namespace Api
@@ -26,7 +25,7 @@ namespace Api
             services.ConfigureTelegramBot(Configuration["TelegramBot:Token"]);
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TelegramBotClient botClient)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
@@ -36,7 +35,7 @@ namespace Api
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
 
-            app.ApplicationServices.ConfigureTelegramBot(botClient);
+            app.ApplicationServices.ConfigureTelegramBot();
         }
     }
 }

@@ -23,9 +23,9 @@ namespace TelegramBot.BotEvents
     public class OnInlineQueryHandler : INotificationHandler<OnInlineQuery>
     {
         private readonly IMediator mediator;
-        private readonly TelegramBotClient botClient;
+        private readonly ITelegramBotClient botClient;
 
-        public OnInlineQueryHandler(IMediator mediator, TelegramBotClient botClient)
+        public OnInlineQueryHandler(IMediator mediator, ITelegramBotClient botClient)
         {
             this.mediator = mediator;
             this.botClient = botClient;

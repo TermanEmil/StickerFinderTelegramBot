@@ -10,11 +10,13 @@ namespace TelegramBot
     {
         public static void ConfigureTelegramBot(this IServiceCollection services, string botToken)
         {
-            services.AddSingleton(new TelegramBotClient(botToken));
+            services.AddSingleton<ITelegramBotClient>(new TelegramBotClient(botToken));
         }
 
-        public static void ConfigureTelegramBot(this IServiceProvider serviceProvider, TelegramBotClient botClient)
+        public static void ConfigureTelegramBot(this IServiceProvider serviceProvider)
         {
+            var botClient = serviceProvider.GetService<ITelegramBotClient>();
+
             botClient.OnMessage += async (s, e) =>
             {
                 using var scope = serviceProvider.CreateScope();
