@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +6,6 @@ using DataAccess;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using MoreLinq.Extensions;
 
 namespace Application
 {

@@ -8,35 +8,38 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.InlineQueryResults;
 
-namespace TelegramBot.BotEvents
+namespace TelegramBot.BotEvents.OnInlineQuery
 {
-    public class OnInlineQuery : INotification
+    public class OnInlineQueryBotEventHandler : INotificationHandler<OnInlineQueryBotEvent>
     {
-        public OnInlineQuery(InlineQuery inlineQuery)
-        {
-            InlineQuery = inlineQuery ?? throw new ArgumentNullException(nameof(inlineQuery));
-        }
+        private const int MinimumInputLength = 2;
 
-        public InlineQuery InlineQuery { get; }
-    }
-
-    public class OnInlineQueryHandler : INotificationHandler<OnInlineQuery>
-    {
         private readonly IMediator mediator;
         private readonly ITelegramBotClient botClient;
 
-        public OnInlineQueryHandler(IMediator mediator, ITelegramBotClient botClient)
+        public OnInlineQueryBotEventHandler(IMediator mediator, ITelegramBotClient botClient)
         {
             this.mediator = mediator;
             this.botClient = botClient;
         }
 
-        public async Task Handle(OnInlineQuery notification, CancellationToken ct)
+        public async Task Handle(OnInlineQueryBotEvent notification, CancellationToken ct)
         {
             var query = notification.InlineQuery;
-            if (query.Query.Length <= 2)
+            if (query.Query.Length <= MinimumInputLength)
                 return;
+            try
+            {
+                await InnerHandler(query, ct);
+            }
+            catch (Exception)
+            {
+                // Ignore for inline queries
+            }
+        }
 
+        private async Task InnerHandler(InlineQuery query, CancellationToken ct)
+        {
             var stickers = await mediator.Send(new FindMatchingStickersQuery(query.Query), ct);
             var results = stickers.Select((s, i) => new InlineQueryResultCachedSticker(i.ToString(), s.FileId));
 
