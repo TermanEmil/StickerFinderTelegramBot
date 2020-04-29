@@ -10,7 +10,7 @@ using Telegram.Bot.Types.InlineQueryResults;
 
 namespace TelegramBot.BotEvents
 {
-    public class OnInlineQuery : INotification
+    public class OnInlineQuery : IBotEvent
     {
         public OnInlineQuery(InlineQuery inlineQuery)
         {

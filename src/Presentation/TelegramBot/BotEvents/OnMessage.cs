@@ -3,13 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Telegram.Bot.Types;
-using TelegramBot.Commands;
 using TelegramBot.Commands.OnDescribeSticker;
 using TelegramBot.Commands.OnListDescriptions;
 
 namespace TelegramBot.BotEvents
 {
-    public class OnMessage : INotification
+    public class OnMessage : IBotEvent
     {
         public OnMessage(Message message)
         {
