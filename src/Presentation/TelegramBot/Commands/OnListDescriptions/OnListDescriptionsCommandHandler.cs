@@ -5,30 +5,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application;
 using MediatR;
-using Microsoft.EntityFrameworkCore.Internal;
 using Telegram.Bot;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Utilities;
 
-namespace TelegramBot.BotEvents.Commands
+namespace TelegramBot.Commands.OnListDescriptions
 {
-    public class OnListDescriptionsCommand : INotification
-    {
-        public Message Message { get; }
-
-        public OnListDescriptionsCommand(Message message)
-        {
-            Message = message ?? throw new ArgumentNullException(nameof(message));
-        }
-    }
-
     public class OnListDescriptionsCommandHandler : INotificationHandler<OnListDescriptionsCommand>
     {
         private readonly IMediator mediator;
-        private readonly TelegramBotClient botClient;
+        private readonly ITelegramBotClient botClient;
 
-        public OnListDescriptionsCommandHandler(IMediator mediator, TelegramBotClient botClient)
+        public OnListDescriptionsCommandHandler(IMediator mediator, ITelegramBotClient botClient)
         {
             this.mediator = mediator;
             this.botClient = botClient;

@@ -1,31 +1,17 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Application;
 using MediatR;
 using Telegram.Bot;
-using Telegram.Bot.Types;
 
-namespace TelegramBot.BotEvents.Commands
+namespace TelegramBot.Commands.OnDescribeSticker
 {
-    public class OnDescribeStickerCommand : INotification
-    {
-        public OnDescribeStickerCommand(Message message, string description)
-        {
-            Message = message ?? throw new ArgumentNullException(nameof(message));
-            Description = description ?? throw new ArgumentNullException(nameof(description));
-        }
-
-        public Message Message { get; }
-        public string Description { get; }
-    }
-
     public class OnDescribeStickerCommandHandler : INotificationHandler<OnDescribeStickerCommand>
     {
         private readonly IMediator mediator;
-        private readonly TelegramBotClient botClient;
+        private readonly ITelegramBotClient botClient;
 
-        public OnDescribeStickerCommandHandler(IMediator mediator, TelegramBotClient botClient)
+        public OnDescribeStickerCommandHandler(IMediator mediator, ITelegramBotClient botClient)
         {
             this.mediator = mediator;
             this.botClient = botClient;
