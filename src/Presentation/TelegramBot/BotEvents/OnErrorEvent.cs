@@ -7,7 +7,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace TelegramBot.BotEvents.OnMessage
+namespace TelegramBot.BotEvents
 {
     public class OnErrorEvent : INotification
     {
@@ -44,7 +44,7 @@ namespace TelegramBot.BotEvents.OnMessage
             switch (exception)
             {
                 case NotFoundException e:
-                    return e.Message;
+                    return "Not Found";
 
                 default:
                     return "Internal error";

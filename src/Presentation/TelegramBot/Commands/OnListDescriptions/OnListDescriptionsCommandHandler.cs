@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Application;
 using MediatR;
@@ -37,23 +34,26 @@ namespace TelegramBot.Commands.OnListDescriptions
 
             await mediator.Send(new EnsureStickerIsRegisteredCommand(sticker.FileUniqueId, sticker.FileId), ct);
             await mediator.Send(new EnsureUserIsRegisteredCommand(fromId), ct);
-            var descriptions = await mediator.Send(new GetStickerDescriptionsQuery(sticker.FileUniqueId), ct);
+            var descriptions = await mediator.Send(new GetStickerDescriptionsQuery(sticker.FileUniqueId), ct).ToList();
 
-            var newMessage = BuildMessage(descriptions.ToList());
-            await botClient.SendTextMessageAsync(
-                message.Chat,
-                newMessage,
-                ParseMode.Html,
-                replyToMessageId: message.MessageId,
-                cancellationToken: ct);
-        }
-
-        private string BuildMessage(IReadOnlyCollection<string> descriptions)
-        {
             if (descriptions.IsEmpty())
-                return "<i>This sticker has no descriptions yet</i>";
-
-            return string.Join(Environment.NewLine, descriptions);
+            {
+                await botClient.SendTextMessageAsync(
+                    chatId: message.Chat,
+                    text: "<i>This sticker has no descriptions</i>",
+                    parseMode: ParseMode.Html,
+                    replyToMessageId: message.MessageId,
+                    cancellationToken: ct);
+            }
+            else
+            {
+                await botClient.SendStickerAsync(
+                    chatId: message.Chat,
+                    sticker: message.ReplyToMessage.Sticker.FileId,
+                    replyToMessageId: message.MessageId,
+                    replyMarkup: StickerDescriptionButtonsBuilder.BuildDescriptionMarkup(descriptions),
+                    cancellationToken: ct);
+            }
         }
     }
 }
