@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Telegram.Bot;
+using TelegramBot.BotEvents.OnCallbackQuery;
 using TelegramBot.BotEvents.OnInlineQuery;
 using TelegramBot.BotEvents.OnMessage;
 
@@ -31,6 +32,14 @@ namespace TelegramBot
                 var mediator = scope.ServiceProvider.GetService<IMediator>();
                 await mediator.Publish(new OnInlineQueryBotEvent(e.InlineQuery));
             };
+
+            botClient.OnCallbackQuery += async (s, e) =>
+            {
+                using var scope = serviceProvider.CreateScope();
+                var mediator = scope.ServiceProvider.GetService<IMediator>();
+                await mediator.Publish(new OnCallbackQueryBotEvent(e.CallbackQuery));
+            };
+
             botClient.StartReceiving();
         }
     }
