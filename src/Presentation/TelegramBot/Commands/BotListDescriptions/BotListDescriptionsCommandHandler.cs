@@ -4,24 +4,23 @@ using Application;
 using MediatR;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
-using Utilities;
 using Utilities.Exceptions;
 using Utilities.Extensions;
 
-namespace TelegramBot.Commands.OnListDescriptions
+namespace TelegramBot.Commands.BotListDescriptions
 {
-    public class OnListDescriptionsCommandHandler : INotificationHandler<OnListDescriptionsCommand>
+    public class BotListDescriptionsCommandHandler : INotificationHandler<BotListDescriptionsCommand>
     {
         private readonly IMediator mediator;
         private readonly ITelegramBotClient botClient;
 
-        public OnListDescriptionsCommandHandler(IMediator mediator, ITelegramBotClient botClient)
+        public BotListDescriptionsCommandHandler(IMediator mediator, ITelegramBotClient botClient)
         {
             this.mediator = mediator;
             this.botClient = botClient;
         }
 
-        public async Task Handle(OnListDescriptionsCommand notification, CancellationToken ct)
+        public async Task Handle(BotListDescriptionsCommand notification, CancellationToken ct)
         {
             var message = notification.Message;
 

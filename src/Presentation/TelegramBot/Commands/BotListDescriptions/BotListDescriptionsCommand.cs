@@ -2,13 +2,13 @@
 using MediatR;
 using Telegram.Bot.Types;
 
-namespace TelegramBot.Commands.OnListDescriptions
+namespace TelegramBot.Commands.BotListDescriptions
 {
-    public class OnListDescriptionsCommand : INotification
+    public class BotListDescriptionsCommand : INotification
     {
         public Message Message { get; }
 
-        public OnListDescriptionsCommand(Message message)
+        public BotListDescriptionsCommand(Message message)
         {
             Message = message ?? throw new ArgumentNullException(nameof(message));
         }

@@ -2,11 +2,11 @@
 using MediatR;
 using Telegram.Bot.Types;
 
-namespace TelegramBot.Commands.OnDescribeSticker
+namespace TelegramBot.Commands.BotDescribeSticker
 {
-    public class OnDescribeStickerCommand : INotification
+    public class BotDescribeStickerCommand : INotification
     {
-        public OnDescribeStickerCommand(Message message, string description)
+        public BotDescribeStickerCommand(Message message, string description)
         {
             Message = message ?? throw new ArgumentNullException(nameof(message));
             Description = description ?? throw new ArgumentNullException(nameof(description));

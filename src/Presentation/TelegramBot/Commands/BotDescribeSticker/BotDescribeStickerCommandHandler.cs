@@ -3,23 +3,21 @@ using System.Threading.Tasks;
 using Application;
 using Application.DescribeSticker;
 using MediatR;
-using Telegram.Bot;
+using TelegramBot.Commands.BotListDescriptions;
 using Utilities.Exceptions;
 
-namespace TelegramBot.Commands.OnDescribeSticker
+namespace TelegramBot.Commands.BotDescribeSticker
 {
-    public class OnDescribeStickerCommandHandler : INotificationHandler<OnDescribeStickerCommand>
+    public class BotDescribeStickerCommandHandler : INotificationHandler<BotDescribeStickerCommand>
     {
         private readonly IMediator mediator;
-        private readonly ITelegramBotClient botClient;
 
-        public OnDescribeStickerCommandHandler(IMediator mediator, ITelegramBotClient botClient)
+        public BotDescribeStickerCommandHandler(IMediator mediator)
         {
             this.mediator = mediator;
-            this.botClient = botClient;
         }
 
-        public async Task Handle(OnDescribeStickerCommand notification, CancellationToken ct)
+        public async Task Handle(BotDescribeStickerCommand notification, CancellationToken ct)
         {
             var message = notification.Message;
 
@@ -33,7 +31,7 @@ namespace TelegramBot.Commands.OnDescribeSticker
             await mediator.Send(new EnsureUserIsRegisteredCommand(fromId), ct);
             await mediator.Send(new DescribeStickerCommand(fromId, sticker.FileUniqueId, notification.Description), ct);
 
-            await botClient.SendTextMessageAsync(message.Chat, "Sticker described", cancellationToken: ct);
+            await mediator.Publish(new BotListDescriptionsCommand(message), ct);
         }
     }
 }
