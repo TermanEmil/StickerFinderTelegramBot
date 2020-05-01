@@ -1,11 +1,10 @@
 using Api.StartupConfigurations;
 using Application.DescribeSticker;
-using FluentValidation.AspNetCore;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Telegram.Bot;
 using TelegramBot;
 
 namespace Api
@@ -21,26 +20,16 @@ namespace Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddControllers()
-                .AddFluentValidation(o => o.RegisterValidatorsFromAssemblyContaining<DescribeStickerCommand>());
+            services.AddValidatorsFromAssemblyContaining<DescribeStickerCommand>();
 
             services.ConfigureMediator();
             services.ConfigureDbContext(Configuration.GetConnectionString("StickerFinderDb"));
             services.ConfigureTelegramBot(Configuration["TelegramBot:Token"]);
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, ITelegramBotClient botClient)
         {
-            if (env.IsDevelopment())
-                app.UseDeveloperExceptionPage();
-
-            app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthorization();
-            app.UseEndpoints(endpoints => endpoints.MapControllers());
-
-            app.ApplicationServices.ConfigureTelegramBot();
+            app.ApplicationServices.ConfigureTelegramBot(botClient);
         }
     }
 }
