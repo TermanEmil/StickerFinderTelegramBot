@@ -1,7 +1,9 @@
 ﻿using Application;
+using Application.DescribeSticker;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using TelegramBot.BotEvents.OnMessage;
+using Utilities;
 
 namespace Api.StartupConfigurations
 {
@@ -11,7 +13,10 @@ namespace Api.StartupConfigurations
         {
             services.AddMediatR(
                 typeof(DescribeStickerCommandHandler),
-                typeof(OnMessageBotEventHandler));
+                typeof(OnMessageBotEventHandler),
+                typeof(RequestValidationBehavior<,>));
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
         }
     }
 }

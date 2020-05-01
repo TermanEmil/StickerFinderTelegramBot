@@ -1,4 +1,6 @@
 using Api.StartupConfigurations;
+using Application.DescribeSticker;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +21,10 @@ namespace Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddFluentValidation(o => o.RegisterValidatorsFromAssemblyContaining<DescribeStickerCommand>());
+
             services.ConfigureMediator();
             services.ConfigureDbContext(Configuration.GetConnectionString("StickerFinderDb"));
             services.ConfigureTelegramBot(Configuration["TelegramBot:Token"]);

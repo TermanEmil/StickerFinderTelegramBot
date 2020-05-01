@@ -52,7 +52,7 @@ namespace TelegramBot.BotEvents.OnMessage
             if (!messageText.StartsWith(command))
                 return Task.CompletedTask;
 
-            var finalCommand = messageText.Replace(command, "");
+            var finalCommand = messageText.Replace(command, "").Trim();
             return action(finalCommand);
         }
     }
