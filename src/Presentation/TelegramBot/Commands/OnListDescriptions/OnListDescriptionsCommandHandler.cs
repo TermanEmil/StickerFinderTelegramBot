@@ -5,6 +5,8 @@ using MediatR;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 using Utilities;
+using Utilities.Exceptions;
+using Utilities.Extensions;
 
 namespace TelegramBot.Commands.OnListDescriptions
 {
@@ -24,10 +26,7 @@ namespace TelegramBot.Commands.OnListDescriptions
             var message = notification.Message;
 
             if (message.ReplyToMessage?.Sticker is null)
-            {
-                await botClient.SendTextMessageAsync(message.Chat, "Must be a reply to a sticker", cancellationToken: ct);
-                return;
-            }
+                throw new ValidationException("Must be a reply to a sticker");
 
             var sticker = message.ReplyToMessage.Sticker;
             var fromId = message.From.Id.ToString();

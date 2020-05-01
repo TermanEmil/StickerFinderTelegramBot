@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DataAccess;
@@ -6,6 +8,8 @@ using MediatR;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Utilities.Exceptions;
+using Utilities.Extensions;
 
 namespace TelegramBot.BotEvents
 {
@@ -43,12 +47,24 @@ namespace TelegramBot.BotEvents
         {
             switch (exception)
             {
-                case NotFoundException e:
+                case ValidationException e:
+                    return BuildValidationErrorMessage(e);
+
+                case NotFoundException _:
                     return "Not Found";
 
                 default:
                     return "Internal error";
             }
+        }
+
+        private static string BuildValidationErrorMessage(ValidationException validationException)
+        {
+            var error = new StringBuilder();
+            foreach (var (_, failures) in validationException.Failures)
+                error.AppendLine($"{string.Join(",", failures)}");
+
+            return error.ToString();
         }
     }
 }

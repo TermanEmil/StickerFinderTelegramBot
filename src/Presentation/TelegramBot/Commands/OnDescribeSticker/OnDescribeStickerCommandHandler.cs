@@ -1,8 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Application;
+using Application.DescribeSticker;
 using MediatR;
 using Telegram.Bot;
+using Utilities.Exceptions;
 
 namespace TelegramBot.Commands.OnDescribeSticker
 {
@@ -22,10 +24,7 @@ namespace TelegramBot.Commands.OnDescribeSticker
             var message = notification.Message;
 
             if (message.ReplyToMessage?.Sticker is null)
-            {
-                await botClient.SendTextMessageAsync(message.Chat, "Must be a reply to a sticker", cancellationToken: ct);
-                return;
-            }
+                throw new ValidationException("Must be a reply to a sticker");
 
             var sticker = message.ReplyToMessage.Sticker;
             var fromId = message.From.Id.ToString();

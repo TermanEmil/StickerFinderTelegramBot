@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,23 +7,11 @@ using DataAccess;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Utilities.Exceptions;
+using Utilities.Extensions;
 
-namespace Application
+namespace Application.DescribeSticker
 {
-    public class DescribeStickerCommand : IRequest
-    {
-        public DescribeStickerCommand(string userId, string stickerId, string description)
-        {
-            UserId = userId;
-            StickerId = stickerId;
-            Description = description;
-        }
-
-        public string UserId { get; }
-        public string StickerId { get; }
-        public string Description { get; }
-    }
-
     public class DescribeStickerCommandHandler : IRequestHandler<DescribeStickerCommand>
     {
         private readonly IStickerFinderDbContext dbContext;
@@ -37,24 +26,32 @@ namespace Application
             var author = await dbContext.Users.FindOrThrow(request.UserId, ct);
             var sticker = await dbContext.Stickers.FindOrThrow(request.StickerId, ct);
 
-            var descriptions = request.Description
-                .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
-                .Select(x => x.ToLower().Trim());
-
-            foreach (var descriptionStr in descriptions)
+            var descriptions = ExtractDescriptions(request.Description.ToLower()).ToList();
+            if (descriptions.IsEmpty())
+                throw new ValidationException("Descriptions are empty");
+            
+            foreach (var description in descriptions)
             {
-                if (string.IsNullOrWhiteSpace(descriptionStr))
+                if (string.IsNullOrWhiteSpace(description))
                     continue;
 
-                if (await DescriptionExists(author, sticker, descriptionStr))
+                if (await DescriptionExists(author, sticker, description))
                     continue;
 
-                var description = new StickerDescription(author, sticker, descriptionStr);
-                dbContext.StickerDescriptions.Add(description);
+                var stickerDescription = new StickerDescription(author, sticker, description);
+                await dbContext.StickerDescriptions.AddAsync(stickerDescription, ct);
             }
 
             await dbContext.SaveChangesAsync(ct);
             return Unit.Value;
+        }
+
+        private static IEnumerable<string> ExtractDescriptions(string description)
+        {
+            return description
+                .Split(new[] { "\r\n", "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .Distinct();
         }
 
         private Task<bool> DescriptionExists(User author, Sticker sticker, string description)
