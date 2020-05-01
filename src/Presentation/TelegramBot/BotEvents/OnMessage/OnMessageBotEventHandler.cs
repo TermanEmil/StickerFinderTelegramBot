@@ -3,8 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Telegram.Bot.Types;
-using TelegramBot.Commands.OnDescribeSticker;
-using TelegramBot.Commands.OnListDescriptions;
+using TelegramBot.Commands.BotDescribeSticker;
+using TelegramBot.Commands.BotListDescriptions;
 
 namespace TelegramBot.BotEvents.OnMessage
 {
@@ -38,12 +38,12 @@ namespace TelegramBot.BotEvents.OnMessage
             await TryExecuteCommand(
                 message,
                 "/describe",
-                s => mediator.Publish(new OnDescribeStickerCommand(message, s), ct));
+                s => mediator.Publish(new BotDescribeStickerCommand(message, s), ct));
 
             await TryExecuteCommand(
                 message,
                 "/list",
-                s => mediator.Publish(new OnListDescriptionsCommand(message), ct));
+                s => mediator.Publish(new BotListDescriptionsCommand(message), ct));
         }
 
         private static Task TryExecuteCommand(Message message, string command, Func<string, Task> action)

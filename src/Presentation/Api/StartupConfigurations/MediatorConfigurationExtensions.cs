@@ -1,5 +1,4 @@
-﻿using Application;
-using Application.DescribeSticker;
+﻿using Application.DescribeSticker;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using TelegramBot.BotEvents.OnMessage;
