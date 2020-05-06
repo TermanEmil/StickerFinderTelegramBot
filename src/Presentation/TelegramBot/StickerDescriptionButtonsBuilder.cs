@@ -23,7 +23,7 @@ namespace TelegramBot
         {
             return descriptions.Select(description => new InlineKeyboardButton
             {
-                Text = description.Description,
+                Text = $"❌ {description.Description}",
                 CallbackData = JsonConvert.SerializeObject(new RemoveDescriptionCallbackData(description.Id)),
             });
         }
