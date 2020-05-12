@@ -5,6 +5,7 @@ using MediatR;
 using Telegram.Bot.Types;
 using TelegramBot.Commands.BotDescribeSticker;
 using TelegramBot.Commands.BotListDescriptions;
+using TelegramBot.Commands.BotListHelp;
 
 namespace TelegramBot.BotEvents.OnMessage
 {
@@ -35,6 +36,11 @@ namespace TelegramBot.BotEvents.OnMessage
 
         private async Task InnerHandle(Message message, CancellationToken ct)
         {
+            await TryExecuteCommand(
+                message,
+                "/help",
+                s => mediator.Publish(new BotListHelpCommand(message), ct));
+
             await TryExecuteCommand(
                 message,
                 "/describe",
