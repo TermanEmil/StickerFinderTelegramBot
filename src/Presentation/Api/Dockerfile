@@ -7,6 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
+RUN ls -lR
 COPY ["Presentation/Api/Api.csproj", "Presentation/Api/"]
 COPY ["Presentation/TelegramBot/TelegramBot.csproj", "Presentation/TelegramBot/"]
 COPY ["Core/Application/Application.csproj", "Core/Application/"]
