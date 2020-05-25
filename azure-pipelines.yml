@@ -14,6 +14,7 @@ variables:
   imageRepository: 'stickerfinder'
   containerRegistry: 'unicornslayer.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/src/Presentation/Api/Dockerfile'
+  buildContextPath: '$(Build.SourcesDirectory)/src'
   tag: '$(Build.BuildId)'
   
   # Agent VM image name
@@ -34,6 +35,7 @@ stages:
         command: buildAndPush
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
+        buildContext: $(buildContextPath)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
