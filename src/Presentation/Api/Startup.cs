@@ -1,3 +1,4 @@
+using System;
 using Api.StartupConfigurations;
 using Application.DescribeSticker;
 using FluentValidation;
@@ -13,7 +14,7 @@ namespace Api
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         public IConfiguration Configuration { get; }
