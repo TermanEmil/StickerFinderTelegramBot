@@ -10,6 +10,8 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
+  dockerfilePath: '$(Build.SourcesDirectory)/src/Presentation/Api/Dockerfile'
+  buildContextPath: '$(Build.SourcesDirectory)/src'
 
 stages:
 - stage: Build
@@ -24,6 +26,7 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/src/Presentation/Api/Dockerfile'
+        dockerfile: $(dockerfilePath)
+        buildContext: $(buildContextPath)
         tags: |
           $(tag)
